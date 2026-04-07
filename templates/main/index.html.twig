@@ -7,7 +7,7 @@
             {% for product in products %}
             <div class="col">
                 <div class="card h-100">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="{{ product.name }}">
+                    <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <span class="badge bg-primary mb-2">{{ product.category.name }}</span>
                         <h5 class="card-title">{{ product.name }}</h5>
