@@ -2,39 +2,50 @@
 {% block title %}{{ product.name }} - Our Store{% endblock %}
 {% block body %}
     <div class="container my-5">
-        <div class="row">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_home') }}" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('app_products_by_category', {'slug': product.category.name}) }}" class="text-decoration-none">{{ product.category.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+            </ol>
+        </nav>
+        <div class="row g-5">
             <div class="col-md-6">
-                <img src="https://via.placeholder.com/500x400" class="img-fluid rounded" alt="{{ product.name }}">
+                {% if product.image %}
+                    <img src="{{ product.image }}" class="img-fluid rounded shadow" alt="{{ product.name }}" style="width: 100%; height: 420px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center rounded shadow" style="height: 420px;">
+                        <i class="bi bi-image text-muted" style="font-size: 5rem;"></i>
+                    </div>
+                {% endif %}
             </div>
             <div class="col-md-6">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}" class="text-decoration-none">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ path('app_products_by_category', {'slug': product.category.name}) }}" class="text-decoration-none">{{ product.category.name }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
-                    </ol>
-                </nav>
                 <span class="badge bg-primary mb-3">{{ product.category.name }}</span>
                 <h1 class="mb-3">{{ product.name }}</h1>
                 <h3 class="text-success mb-4">${{ product.price }}</h3>
                 <div class="mb-4">
                     <h5>Description</h5>
-                    <p class="text-muted">{{ product.description }}</p>
+                    <p class="text-muted">{{ product.description ?? 'No description available.' }}</p>
                 </div>
                 <form method="post" action="{{ path('app_cart_add', {'id': product.id}) }}">
-                    <div class="mb-3">
-                        <label for="quantity" class="form-label">Quantity</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10" style="max-width: 100px;">
+                    <div class="mb-3 d-flex align-items-center gap-3">
+                        <label for="quantity" class="form-label mb-0 fw-semibold">Quantity:</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10" style="max-width: 90px;">
                     </div>
                     <div class="d-grid gap-2 d-md-flex">
-                        <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
-                        <a href="{{ path('app_products') }}" class="btn btn-outline-secondary btn-lg">Continue Shopping</a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                        </button>
+                        <a href="{{ path('app_products') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-arrow-left me-1"></i>Continue Shopping
+                        </a>
                     </div>
                 </form>
                 <div class="mt-4 pt-4 border-top">
                     <ul class="list-unstyled">
-                        <li class="mb-2"><strong>Availability:</strong> <span class="text-success">In Stock</span></li>
-                        <li class="mb-2"><strong>Category:</strong> {{ product.category.name }}</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i><strong>Availability:</strong> In Stock</li>
+                        <li class="mb-2"><i class="bi bi-tag me-2 text-primary"></i><strong>Category:</strong> {{ product.category.name }}</li>
+                        <li class="mb-2"><i class="bi bi-truck me-2 text-info"></i><strong>Shipping:</strong> $10.00 flat rate</li>
                     </ul>
                 </div>
             </div>

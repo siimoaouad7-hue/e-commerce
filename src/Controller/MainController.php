@@ -7,6 +7,7 @@ use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MainController extends AbstractController
 {
@@ -30,6 +31,11 @@ class MainController extends AbstractController
     public function productDetails(int $id, ProductRepository $productRepository): Response
     {
         $product = $productRepository->find($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException('Product not found');
+        }
+
         return $this->render('main/product_details.html.twig', [
             'product' => $product,
         ]);
@@ -47,17 +53,21 @@ class MainController extends AbstractController
     public function productsByCategory(string $slug, CategoryRepository $categoryRepository): Response
     {
         $category = $categoryRepository->findOneBy(['name' => $slug]);
+
+        if (!$category) {
+            throw $this->createNotFoundException('Category not found');
+        }
+
         return $this->render('main/products_by_category.html.twig', [
             'category' => $category,
-            'products' => $category ? $category->getProducts() : [],
+            'products' => $category->getProducts(),
         ]);
     }
 
-
     #[Route('/profile', name: 'app_profile')]
+    #[IsGranted('ROLE_USER')]
     public function profile(): Response
     {
         return $this->render('main/profile.html.twig');
     }
-
 }

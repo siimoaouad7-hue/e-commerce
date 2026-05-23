@@ -25,6 +25,8 @@ class CartController extends AbstractController
         $quantity = (int) $request->request->get('quantity', 1);
         $cartHandler->add($id, $quantity);
 
+        $this->addFlash('success', 'Product added to cart successfully!');
+
         return $this->redirectToRoute('app_cart');
     }
 
@@ -33,6 +35,8 @@ class CartController extends AbstractController
     {
         $cartHandler->remove($id);
 
+        $this->addFlash('info', 'Product removed from cart.');
+
         return $this->redirectToRoute('app_cart');
     }
 
@@ -40,6 +44,8 @@ class CartController extends AbstractController
     public function clear(CartHandler $cartHandler): Response
     {
         $cartHandler->clear();
+
+        $this->addFlash('info', 'Cart cleared.');
 
         return $this->redirectToRoute('app_cart');
     }

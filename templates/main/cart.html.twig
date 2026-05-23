@@ -2,15 +2,15 @@
 {% block title %}Shopping Cart - Our Store{% endblock %}
 {% block body %}
     <div class="container my-5">
-        <h1 class="mb-4">Shopping Cart</h1>
+        <h1 class="mb-4"><i class="bi bi-cart3 me-2"></i>Shopping Cart</h1>
         <div class="row">
             <div class="col-lg-8">
-                <div class="card mb-3">
+                <div class="card shadow-sm border-0 mb-3">
                     <div class="card-body">
                         {% if items|length > 0 %}
                         <div class="table-responsive">
                             <table class="table align-middle">
-                                <thead>
+                                <thead class="table-light">
                                     <tr>
                                         <th>Product</th>
                                         <th>Price</th>
@@ -24,7 +24,13 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <img src="https://via.placeholder.com/80" class="img-thumbnail me-3" alt="{{ item.product.name }}" style="width: 80px; height: 80px; object-fit: cover;">
+                                                {% if item.product.image %}
+                                                    <img src="{{ item.product.image }}" class="img-thumbnail me-3" alt="{{ item.product.name }}" style="width: 80px; height: 80px; object-fit: cover;">
+                                                {% else %}
+                                                    <div class="bg-light d-flex align-items-center justify-content-center me-3 rounded" style="width: 80px; height: 80px;">
+                                                        <i class="bi bi-image text-muted"></i>
+                                                    </div>
+                                                {% endif %}
                                                 <div>
                                                     <h6 class="mb-0">{{ item.product.name }}</h6>
                                                     <small class="text-muted">{{ item.product.category.name }}</small>
@@ -32,41 +38,68 @@
                                             </div>
                                         </td>
                                         <td>${{ item.product.price }}</td>
-                                        <td>{{ item.quantity }}</td>
-                                        <td class="fw-bold">${{ item.total }}</td>
-                                        <td><a href="{{ path('app_cart_remove', {'id': item.product.id}) }}" class="btn btn-sm btn-outline-danger">Remove</a></td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ item.quantity }}</span>
+                                        </td>
+                                        <td class="fw-bold text-success">${{ item.total }}</td>
+                                        <td>
+                                            <a href="{{ path('app_cart_remove', {'id': item.product.id}) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Remove this item?')">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                         {% else %}
-                        <p class="text-center text-muted my-4">Your cart is empty.</p>
+                        <div class="text-center py-5">
+                            <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+                            <p class="text-muted mt-3 fs-5">Your cart is empty.</p>
+                            <a href="{{ path('app_products') }}" class="btn btn-primary mt-2">
+                                <i class="bi bi-arrow-left me-1"></i>Start Shopping
+                            </a>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
-                <a href="{{ path('app_products') }}" class="btn btn-outline-primary">Continue Shopping</a>
-            </div>
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Order Summary</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-2"><span>Subtotal:</span><span>${{ total }}</span></div>
-                        <div class="d-flex justify-content-between mb-2"><span>Shipping:</span><span>$10.00</span></div>
-                        <hr>
-                        <div class="d-flex justify-content-between mb-3"><strong>Total:</strong><strong class="text-success">${{ total + 10 }}</strong></div>
-                        <div class="d-grid"><button class="btn btn-success btn-lg">Proceed to Checkout</button></div>
-                    </div>
-                </div>
                 {% if items|length > 0 %}
-                <div class="card mt-3">
-                    <div class="card-body text-center">
-                        <a href="{{ path('app_cart_clear') }}" class="btn btn-outline-danger">Clear Cart</a>
-                    </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ path('app_products') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left me-1"></i>Continue Shopping
+                    </a>
+                    <a href="{{ path('app_cart_clear') }}" class="btn btn-outline-danger" onclick="return confirm('Clear entire cart?')">
+                        <i class="bi bi-trash me-1"></i>Clear Cart
+                    </a>
                 </div>
                 {% endif %}
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-receipt me-2"></i>Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>${{ total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Shipping:</span>
+                            <span>$10.00</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Total:</strong>
+                            <strong class="text-success fs-5">${{ total + 10 }}</strong>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-success btn-lg" {% if items|length == 0 %}disabled{% endif %}>
+                                <i class="bi bi-credit-card me-2"></i>Proceed to Checkout
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

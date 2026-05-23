@@ -20,7 +20,7 @@ class Category
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $desciption = null;
+    private ?string $description = null;
 
     /**
      * @var Collection<int, Product>
@@ -46,19 +46,17 @@ class Category
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
-    public function getDesciption(): ?string
+    public function getDescription(): ?string
     {
-        return $this->desciption;
+        return $this->description;
     }
 
-    public function setDesciption(string $desciption): static
+    public function setDescription(string $description): static
     {
-        $this->desciption = $desciption;
-
+        $this->description = $description;
         return $this;
     }
 
@@ -76,19 +74,16 @@ class Category
             $this->products->add($product);
             $product->setCategory($this);
         }
-
         return $this;
     }
 
     public function removeProduct(Product $product): static
     {
         if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
             if ($product->getCategory() === $this) {
                 $product->setCategory(null);
             }
         }
-
         return $this;
     }
 }
