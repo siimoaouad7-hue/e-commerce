@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
         foreach ($categoriesData as $catData) {
             $category = new Category();
             $category->setName($catData['name']);
-            $category->setDesciption($catData['description']);
+            $category->setDescription($catData['description']);
             $manager->persist($category);
             $categories[$catData['name']] = $category;
         }

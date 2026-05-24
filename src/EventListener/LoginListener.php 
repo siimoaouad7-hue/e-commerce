@@ -1,0 +1,22 @@
+<?php
+
+  namespace App\EventListener;
+
+  use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+  use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
+  use Symfony\Component\HttpFoundation\RequestStack;
+
+  #[AsEventListener]
+  class LoginListener
+  {
+      public function __construct(private RequestStack $requestStack) {}
+
+      public function __invoke(LoginSuccessEvent $event): void
+      {
+          $user = $event->getUser();
+          $this->requestStack->getSession()->getFlashBag()->add(
+              'success',
+              'Bienvenue, ' . $user->getUserIdentifier()
+          );
+      }
+  }
